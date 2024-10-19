@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ProductProvider_GraphQL": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7236",
+      "launchBrowser": false
+    }
+  }
+}
