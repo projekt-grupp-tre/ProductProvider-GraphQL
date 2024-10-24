@@ -11,26 +11,26 @@ namespace ProductProvider.Infrastructure.Data.Entities;
 public class ProductEntity
 {
     [Key]
-    public int ProductId { get; set; }
+    public Guid ProductId { get; set; }
 
     [ForeignKey("CategoryEntity")]
     public int CategoryId { get; set; }
 
-    [Required]
-    [MaxLength(255)]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
+    
 
-    public string Description { get; set; }
+    public string Description { get; set; } = null!;
+
 
     public decimal Price { get; set; }
+    public List<(string Url, string Alt)> Images { get; set; } = new List<(string Url, string Alt)>();
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public CategoryEntity Category { get; set; }
+    public CategoryEntity? Category { get; set; }
 
-    public ICollection<ProductImageEntity> Images { get; set; }
 
-    public ICollection<ReviewEntity> Reviews { get; set; }
+    public ICollection<ReviewEntity>? Reviews { get; set; }
 
-    public ICollection<ProductToFiltersEntity> ProductFilters { get; set; }
+
 }

@@ -13,19 +13,16 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseLazyLoadingProxies();
-            }
-        }
+    {
+     
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
         modelBuilder.Entity<CategoryEntity>().HasKey(c => c.CategoryId);
-
         modelBuilder.Entity<ProductEntity>().HasKey(p => p.ProductId);
+        modelBuilder.Entity<ReviewEntity>().HasKey(p => p.ReviewId);
         modelBuilder.Entity<ProductEntity>().HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId);
         modelBuilder.Entity<ProductEntity>().HasMany(p => p.Reviews).WithOne(r => r.Product).HasForeignKey(r => r.ProductId);
 

@@ -16,16 +16,14 @@ public class ReviewEntity
     [ForeignKey("Product")]
     public int ProductId { get; set; }
 
-    [Required]
-    [MaxLength(255)]
-    public string ClientName { get; set; }
+    public string ClientName { get; set; } = null!;
 
-    [Range(1, 5)]
+    //[Range(1, 5)]
     public int Rating { get; set; }
 
-    public string Comment { get; set; }
+    public string Comment { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public ProductEntity Product { get; set; }
+    public ProductEntity Product { get; set; } = null!;
 }

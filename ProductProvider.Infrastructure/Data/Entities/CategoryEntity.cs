@@ -12,12 +12,10 @@ public class CategoryEntity
     [Key]
     public int CategoryId { get; set; }
 
-    [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string Description { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public ICollection<ProductEntity> Products { get; set; }
+    public ICollection<ProductEntity>? Products { get; set; }
 }
