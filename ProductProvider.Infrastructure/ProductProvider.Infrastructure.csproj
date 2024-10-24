@@ -9,9 +9,14 @@
   <ItemGroup>
     <Folder Include="Factories\" />
     <Folder Include="GraphQL\Mutations\" />
+    <Folder Include="GraphQL\Mutations\" />
+    <Folder Include="GraphQL\Queries\" />
+    <Folder Include="GraphQL\ObjectTypes\" />
     <Folder Include="GraphQL\Queries\" />
     <Folder Include="GraphQL\ObjectTypes\" />
     <Folder Include="Models\" />
+    <Folder Include="Models\" />
+    <Folder Include="Services\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
