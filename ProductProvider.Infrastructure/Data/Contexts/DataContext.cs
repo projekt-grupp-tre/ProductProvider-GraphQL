@@ -27,6 +27,8 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<ProductVariantEntity>().HasKey(p => p.ProductVariantId);
         modelBuilder.Entity<ProductEntity>().HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryId);
         modelBuilder.Entity<ProductEntity>().HasMany(p => p.Reviews).WithOne(r => r.Product).HasForeignKey(r => r.ProductId);
+        modelBuilder.Entity<ProductEntity>().HasMany(p => p.Variants).WithOne(pv => pv.Product).HasForeignKey(pv => pv.ProductId);
+       
 
         base.OnModelCreating(modelBuilder);
     }
