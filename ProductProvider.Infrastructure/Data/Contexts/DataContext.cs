@@ -10,6 +10,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<CategoryEntity> Categories { get; set; }
     public DbSet<ProductEntity> Products { get; set; }
     public DbSet<ReviewEntity> Reviews { get; set; }
+    public DbSet<ProductVariantEntity> ProductVariants { get; set; }
 
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

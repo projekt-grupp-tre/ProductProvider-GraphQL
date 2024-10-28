@@ -14,7 +14,7 @@ public class ReviewEntity
     public int ReviewId { get; set; }
 
     [ForeignKey("Product")]
-    public int ProductId { get; set; }
+    public Guid ProductId { get; set; }
 
     public string ClientName { get; set; } = null!;
 
