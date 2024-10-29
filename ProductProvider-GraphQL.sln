@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductProvider-GraphQL", "ProductProvider-GraphQL\ProductProvider-GraphQL.csproj", "{CE7BA41C-CCBA-43FF-8099-657BFDE6BF8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductProvider-GraphQL", "ProductProvider-GraphQL\ProductProvider-GraphQL.csproj", "{CE7BA41C-CCBA-43FF-8099-657BFDE6BF8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductProvider.Infrastructure", "ProductProvider.Infrastructure\ProductProvider.Infrastructure.csproj", "{E96EED0D-16EE-4030-B1B6-DFA4CD6411D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductProvider.Infrastructure", "ProductProvider.Infrastructure\ProductProvider.Infrastructure.csproj", "{E96EED0D-16EE-4030-B1B6-DFA4CD6411D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
