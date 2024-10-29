@@ -24,5 +24,5 @@ public class ProductVariantEntity
 
     public decimal Price { get; set; } 
 
-    public ProductEntity Product { get; set; } = null!;
+    public virtual ProductEntity Product { get; set; } = null!;
 }

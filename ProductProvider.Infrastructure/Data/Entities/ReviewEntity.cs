@@ -25,5 +25,5 @@ public class ReviewEntity
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public ProductEntity Product { get; set; } = null!;
+    public virtual ProductEntity Product { get; set; } = null!;
 }

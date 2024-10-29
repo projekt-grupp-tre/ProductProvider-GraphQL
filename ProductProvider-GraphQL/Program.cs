@@ -11,27 +11,27 @@ using ProductProvider.Infrastructure.Services;
 
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWebApplication()
-    .ConfigureServices(services =>
-    {
-        services.AddApplicationInsightsTelemetryWorkerService();
-        services.ConfigureFunctionsApplicationInsights();
-        services.AddPooledDbContextFactory<DataContext>(options =>
-            options.UseSqlServer(Environment.GetEnvironmentVariable("Productdb"))
-                   .UseLazyLoadingProxies());
+	.ConfigureFunctionsWebApplication()
+	.ConfigureServices(services =>
+	{
+		services.AddApplicationInsightsTelemetryWorkerService();
+		services.ConfigureFunctionsApplicationInsights();
 
-        services.AddScoped<ProductService>();
-        services
-            .AddGraphQLFunction()
-            .AddQueryType<ProductQuery>()
-            .AddMutationType<ProductMutation>()
-            .AddType<ProductType>()
-            .AddType<CategoryType>()
-            .AddType<ProductVariantType>()
-            .AddType<ReviewType>();
-            
-        services.AddGraphQLServer();
-    })
-    .Build();
+		services.AddDbContext<DataContext>(options =>
+			options.UseSqlServer(Environment.GetEnvironmentVariable("Productdb"))
+           .UseLazyLoadingProxies());
+
+		services.AddScoped<ProductService>();
+
+		services
+			.AddGraphQLFunction()
+			.AddQueryType<ProductQuery>()
+			.AddMutationType<ProductMutation>()
+			.AddType<ProductType>()
+			.AddType<CategoryType>()
+			.AddType<ProductVariantType>()
+			.AddType<ReviewType>();
+	})
+	.Build();
 
 host.Run();

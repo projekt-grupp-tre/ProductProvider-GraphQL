@@ -17,5 +17,5 @@ public class CategoryEntity
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public ICollection<ProductEntity>? Products { get; set; }
+    public virtual ICollection<ProductEntity>? Products { get; set; }
 }
