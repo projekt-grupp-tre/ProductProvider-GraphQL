@@ -8,9 +8,8 @@ namespace ProductProvider.Infrastructure.GraphQL.Mutations;
 
 public class ProductMutation
 {
-    public async Task<ProductEntity> AddFullProductAsync(AddProductInput input, ProductService productService)
+    public async Task<ProductEntity> AddProductAsync(AddProductInput input, ProductService productService)
     {
-        // Skapa ny produkt med alla dess egenskaper
         var product = new ProductEntity
         {
             Name = input.Name,
@@ -34,15 +33,15 @@ public class ProductMutation
             }).ToList()
         };
 
-        return await productService.AddFullProductAsync(product);
+        return await productService.AddProductAsync(product);
     }
 
-    public async Task<bool> DeleteFullProductAsync(Guid productId, ProductService productService)
+    public async Task<bool> DeleteProductAsync(Guid productId, ProductService productService)
     {
-        return await productService.DeleteFullProductAsync(productId);
+        return await productService.DeleteProductAsync(productId);
     }
 
-    public async Task<ProductEntity?> UpdateFullProductAsync(Guid productId, AddProductInput input, ProductService productService)
+    public async Task<ProductEntity?> UpdateProductAsync(Guid productId, AddProductInput input, ProductService productService)
     {
         var product = new ProductEntity
         {
@@ -67,6 +66,6 @@ public class ProductMutation
             }).ToList()
         };
 
-        return await productService.UpdateFullProductAsync(product);
+        return await productService.UpdateProductAsync(product);
     }
 }

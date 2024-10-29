@@ -7,81 +7,76 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductProvider.Infrastructure.Services
+namespace ProductProvider.Infrastructure.Services;
+
+public class ProductService
 {
-    public class ProductService
+    private readonly DataContext _context;
+
+    public ProductService(DataContext context)
     {
-        private readonly IDbContextFactory<DataContext> _contextFactory;
+        _context = context;
+    }
 
-        public ProductService(IDbContextFactory<DataContext> contextFactory)
+    public async Task<ProductEntity> AddProductAsync(ProductEntity product)
+    {
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
+        return product;
+    }
+
+    public async Task<ProductEntity?> UpdateProductAsync(ProductEntity updatedProduct)
+    {
+        var product = await _context.Products
+            .Include(p => p.Category)
+            .Include(p => p.Variants)
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.ProductId == updatedProduct.ProductId);
+
+        if (product == null) return null;
+
+        product.Name = updatedProduct.Name;
+        product.Description = updatedProduct.Description;
+        product.Images = updatedProduct.Images;
+
+        if (product.Category != null && updatedProduct.Category != null)
         {
-            _contextFactory = contextFactory;
+            product.Category.Name = updatedProduct.Category.Name;
         }
 
-        public async Task<ProductEntity> AddFullProductAsync(ProductEntity product)
-        {
-            using var context = _contextFactory.CreateDbContext();
-            context.Products.Add(product);
-            await context.SaveChangesAsync();
-            return product;
-        }
+        product.Variants.Clear();
+        product.Variants = updatedProduct.Variants;
 
-        public async Task<ProductEntity?> UpdateFullProductAsync(ProductEntity updatedProduct)
-        {
-            using var context = _contextFactory.CreateDbContext();
-            var product = await context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Variants)
-                .Include(p => p.Reviews)
-                .FirstOrDefaultAsync(p => p.ProductId == updatedProduct.ProductId);
+        product.Reviews.Clear();
+        product.Reviews = updatedProduct.Reviews;
 
-            if (product == null) return null;
+        await _context.SaveChangesAsync();
+        return product;
+    }
 
-            product.Name = updatedProduct.Name;
-            product.Description = updatedProduct.Description;
-            product.Images = updatedProduct.Images;
+    public async Task<bool> DeleteProductAsync(Guid productId)
+    {
+        var product = await _context.Products.Include(p => p.Variants).Include(p => p.Reviews).FirstOrDefaultAsync(p => p.ProductId == productId);
 
-            if (product.Category != null && updatedProduct.Category != null)
-            {
-                product.Category.Name = updatedProduct.Category.Name;
-            }
+        if (product == null) return false;
 
-            product.Variants.Clear();
-            product.Variants = updatedProduct.Variants;
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
-            product.Reviews.Clear();
-            product.Reviews = updatedProduct.Reviews;
+    public async Task<ProductEntity?> GetProductByIdAsync(Guid productId)
+    {
+        return await _context.Products
+            .Include(p => p.Category)
+            .Include(p => p.Variants)
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.ProductId == productId);
+    }
 
-            await context.SaveChangesAsync();
-            return product;
-        }
-
-        public async Task<bool> DeleteFullProductAsync(Guid productId)
-        {
-            using var context = _contextFactory.CreateDbContext();
-            var product = await context.Products.Include(p => p.Variants).Include(p => p.Reviews).FirstOrDefaultAsync(p => p.ProductId == productId);
-
-            if (product == null) return false;
-
-            context.Products.Remove(product);
-            await context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<ProductEntity?> GetProductByIdAsync(Guid productId)
-        {
-            using var context = _contextFactory.CreateDbContext();
-            return await context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Variants)
-                .Include(p => p.Reviews)
-                .FirstOrDefaultAsync(p => p.ProductId == productId);
-        }
-
-        public IQueryable<ProductEntity> GetAllProducts()
-        {
-            var context = _contextFactory.CreateDbContext();
-            return context.Products.Include(p => p.Category).Include(p => p.Variants).Include(p => p.Reviews);
-        }
+    public IQueryable<ProductEntity> GetAllProducts()
+    {
+        return _context.Products.Include(p => p.Category).Include(p => p.Variants).Include(p => p.Reviews);
     }
 }
+
