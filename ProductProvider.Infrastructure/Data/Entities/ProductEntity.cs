@@ -20,7 +20,7 @@ public class ProductEntity
 
     public string Description { get; set; } = null!;
 
-    public List<string> Images { get; set; } =[];
+    public List<string> Images { get; set; } = [];
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
@@ -31,30 +31,3 @@ public class ProductEntity
     public virtual ICollection<ReviewEntity>? Reviews { get; set; }
 }
 
-
-//public class ProductEntity
-//{
-//    [Key]
-//    public Guid ProductId { get; set; }
-
-//    [ForeignKey("CategoryEntity")]
-//    public int CategoryId { get; set; }
-
-//    public string Name { get; set; } = null!;
-
-
-//    public string Description { get; set; } = null!;
-
-
-//    public decimal Price { get; set; }
-//    public List<(string Url, string Alt)> Images { get; set; } = new List<(string Url, string Alt)>();
-
-//    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-//    public CategoryEntity? Category { get; set; }
-
-
-//    public ICollection<ReviewEntity>? Reviews { get; set; }
-
-
-//}

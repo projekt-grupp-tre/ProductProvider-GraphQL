@@ -10,12 +10,14 @@ public class ProductMutation
 {
     public async Task<ProductEntity> AddProductAsync(AddProductInput input, ProductService productService)
     {
+        var category = await productService.GetOrCreateCategoryByNameAsync(input.CategoryName);
+
         var product = new ProductEntity
         {
             Name = input.Name,
             Description = input.Description,
             Images = input.Images,
-            Category = new CategoryEntity { Name = input.CategoryName, CreatedAt = DateTime.UtcNow },
+            Category = category,
             CreatedAt = DateTime.UtcNow,
             Variants = input.Variants.Select(v => new ProductVariantEntity
             {
@@ -35,6 +37,7 @@ public class ProductMutation
 
         return await productService.AddProductAsync(product);
     }
+
 
     public async Task<bool> DeleteProductAsync(Guid productId, ProductService productService)
     {

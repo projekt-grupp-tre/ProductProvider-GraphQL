@@ -1,3 +1,4 @@
+using HotChocolate.AzureFunctions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

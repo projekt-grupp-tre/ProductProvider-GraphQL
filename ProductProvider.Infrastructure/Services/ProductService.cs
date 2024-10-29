@@ -78,5 +78,16 @@ public class ProductService
     {
         return _context.Products.Include(p => p.Category).Include(p => p.Variants).Include(p => p.Reviews);
     }
+    public async Task<CategoryEntity> GetOrCreateCategoryByNameAsync(string categoryName)
+    {
+        var category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName);
+        if (category == null)
+        {
+            category = new CategoryEntity { Name = categoryName, CreatedAt = DateTime.UtcNow };
+            _context.Categories.Add(category);
+            await _context.SaveChangesAsync();
+        }
+        return category;
+    }
 }
 
