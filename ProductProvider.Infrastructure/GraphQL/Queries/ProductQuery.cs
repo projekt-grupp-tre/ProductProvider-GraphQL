@@ -11,12 +11,13 @@ namespace ProductProvider.Infrastructure.GraphQL.Queries
 {
     public class ProductQuery
     {
-        public IQueryable<ProductEntity> GetProducts(ProductService productService)
+        [GraphQLName("getProducts")]
+        public IQueryable<ProductEntity> GetProducts([Service] ProductService productService)
         {
             return productService.GetAllProducts();
         }
-
-        public async Task<ProductEntity?> GetProductById(Guid productId, ProductService productService)
+        [GraphQLName("getProductById")]
+        public async Task<ProductEntity?> GetProductById(Guid productId, [Service] ProductService productService)
         {
             return await productService.GetProductByIdAsync(productId);
         }

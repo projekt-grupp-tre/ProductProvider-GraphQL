@@ -8,6 +8,8 @@ namespace ProductProvider.Infrastructure.GraphQL.Mutations;
 
 public class ProductMutation
 {
+   
+    [GraphQLName("addProduct")]
     public async Task<ProductEntity> AddProductAsync(AddProductInput input, ProductService productService)
     {
         var category = await productService.GetOrCreateCategoryByNameAsync(input.CategoryName);
@@ -38,12 +40,12 @@ public class ProductMutation
         return await productService.AddProductAsync(product);
     }
 
-
+    [GraphQLName("deleteProduct")]
     public async Task<bool> DeleteProductAsync(Guid productId, ProductService productService)
     {
         return await productService.DeleteProductAsync(productId);
     }
-
+    [GraphQLName("updateProduct")]
     public async Task<ProductEntity?> UpdateProductAsync(Guid productId, AddProductInput input, ProductService productService)
     {
         var product = new ProductEntity
