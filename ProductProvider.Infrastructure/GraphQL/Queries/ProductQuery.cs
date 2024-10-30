@@ -21,5 +21,10 @@ namespace ProductProvider.Infrastructure.GraphQL.Queries
         {
             return await productService.GetProductByIdAsync(productId);
         }
+        [GraphQLName("getProductsByCategory")]
+        public IQueryable<ProductEntity> GetProductsByCategory(string categoryName, [Service] ProductService productService)
+        {
+            return productService.GetAllProducts().Where(p => p.Category != null && p.Category.Name == categoryName);
+        }
     }
 }

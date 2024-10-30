@@ -17,7 +17,7 @@ namespace ProductProvider_GraphQL.Functions
 
         [Function("Playground")]
         public async Task<HttpResponseData> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
         {
             _logger.LogInformation("Serving GraphQL Playground.");
 
