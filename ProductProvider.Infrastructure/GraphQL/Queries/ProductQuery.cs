@@ -26,5 +26,11 @@ namespace ProductProvider.Infrastructure.GraphQL.Queries
         {
             return productService.GetAllProducts().Where(p => p.Category != null && p.Category.Name == categoryName);
         }
+        [GraphQLName("getProductsByIds")]
+        public async Task<IEnumerable<ProductEntity>> GetProductsByIds(IEnumerable<Guid> productIds, [Service] ProductService productService)
+        {
+            var products = await productService.GetProductsByIdsAsync(productIds);
+            return products;
+        }
     }
 }

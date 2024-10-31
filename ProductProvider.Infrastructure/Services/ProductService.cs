@@ -73,7 +73,15 @@ public class ProductService
             .Include(p => p.Reviews)
             .FirstOrDefaultAsync(p => p.ProductId == productId);
     }
-
+    public async Task<IEnumerable<ProductEntity>> GetProductsByIdsAsync(IEnumerable<Guid> productIds)
+    {
+        return await _context.Products
+            .Include(p => p.Category)
+            .Include(p => p.Variants)
+            .Include(p => p.Reviews)
+            .Where(p => productIds.Contains(p.ProductId))
+            .ToListAsync();
+    }
     public IQueryable<ProductEntity> GetAllProducts()
     {
         return _context.Products.Include(p => p.Category).Include(p => p.Variants).Include(p => p.Reviews);
