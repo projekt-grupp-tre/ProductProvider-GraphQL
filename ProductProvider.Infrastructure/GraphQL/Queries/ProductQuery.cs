@@ -1,11 +1,6 @@
 ﻿using HotChocolate;
 using ProductProvider.Infrastructure.Data.Entities;
 using ProductProvider.Infrastructure.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductProvider.Infrastructure.GraphQL.Queries
 {
@@ -31,6 +26,12 @@ namespace ProductProvider.Infrastructure.GraphQL.Queries
         {
             var products = await productService.GetProductsByIdsAsync(productIds);
             return products;
+        }
+
+        [GraphQLName("getCategories")]
+        public async Task<IEnumerable<CategoryEntity>> GetCategories([Service] ProductService productService)
+        {
+            return await productService.GetAllCategories();
         }
     }
 }

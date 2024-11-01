@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductProvider.Infrastructure.Data.Contexts;
 using ProductProvider.Infrastructure.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductProvider.Infrastructure.Services;
 
@@ -84,7 +79,11 @@ public class ProductService
     }
     public IQueryable<ProductEntity> GetAllProducts()
     {
-        return _context.Products.Include(p => p.Category).Include(p => p.Variants).Include(p => p.Reviews);
+        return _context.Products
+            .Include(p => p.Category)
+            .Include(p => p.Variants)
+            .Include(p => p.Reviews)
+            .AsNoTracking();
     }
     public async Task<CategoryEntity> GetOrCreateCategoryByNameAsync(string categoryName)
     {
@@ -96,6 +95,18 @@ public class ProductService
             await _context.SaveChangesAsync();
         }
         return category;
+    }
+
+    public async Task<IEnumerable<CategoryEntity>> GetAllCategories()
+    {
+        var categoryList = await _context.Categories
+            .AsNoTracking()
+            .ToListAsync();
+
+        if (categoryList is null)
+            return Enumerable.Empty<CategoryEntity>();
+
+        return categoryList;
     }
 }
 
