@@ -73,4 +73,20 @@ public class ProductMutation
 
         return await productService.UpdateProductAsync(product);
     }
+
+    [GraphQLName("addReviewToProduct")]
+    public async Task<ReviewEntity?> AddReviewToProductAsync(Guid productId, ReviewInput input, ProductService productService)
+    {
+
+        var review = new ReviewEntity
+        {
+            ProductId = productId,
+            ClientName = input.ClientName,
+            Rating = input.Rating,
+            Comment = input.Comment,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        return await productService.AddReviewToProductAsync(productId, review);
+    }
 }

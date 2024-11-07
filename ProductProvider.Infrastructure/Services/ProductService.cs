@@ -108,5 +108,22 @@ public class ProductService
 
         return categoryList;
     }
+
+    public async Task<ReviewEntity?> AddReviewToProductAsync(Guid productId, ReviewEntity review)
+    {
+        var product = await _context.Products
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+        if (product == null)
+        {
+            return null; 
+        }
+
+        product.Reviews.Add(review);
+        await _context.SaveChangesAsync();
+
+        return review;
+    }
 }
 
