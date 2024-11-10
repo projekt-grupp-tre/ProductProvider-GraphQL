@@ -46,32 +46,9 @@ public class ProductMutation
         return await productService.DeleteProductAsync(productId);
     }
     [GraphQLName("updateProduct")]
-    public async Task<ProductEntity?> UpdateProductAsync(Guid productId, AddProductInput input, ProductService productService)
+    public async Task<ProductEntity?> UpdateProductAsync(Guid productId, UpdateProductInput input, ProductService productService)
     {
-        var product = new ProductEntity
-        {
-            ProductId = productId,
-            Name = input.Name,
-            Description = input.Description,
-            Images = input.Images,
-            Category = new CategoryEntity { Name = input.CategoryName, CreatedAt = DateTime.UtcNow },
-            Variants = input.Variants.Select(v => new ProductVariantEntity
-            {
-                Size = v.Size,
-                Color = v.Color,
-                Stock = v.Stock,
-                Price = v.Price
-            }).ToList(),
-            Reviews = input.Reviews.Select(r => new ReviewEntity
-            {
-                ClientName = r.ClientName,
-                Rating = r.Rating,
-                Comment = r.Comment,
-                CreatedAt = DateTime.UtcNow
-            }).ToList()
-        };
-
-        return await productService.UpdateProductAsync(product);
+        return await productService.UpdateProductWithReviewAndVariantHandlingAsync(productId, input);
     }
 
     [GraphQLName("addReviewToProduct")]

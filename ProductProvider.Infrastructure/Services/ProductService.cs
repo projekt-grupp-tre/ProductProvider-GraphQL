@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductProvider.Infrastructure.Data.Contexts;
 using ProductProvider.Infrastructure.Data.Entities;
+using ProductProvider.Infrastructure.Models;
 
 namespace ProductProvider.Infrastructure.Services;
 
@@ -20,34 +21,86 @@ public class ProductService
         return product;
     }
 
-    public async Task<ProductEntity?> UpdateProductAsync(ProductEntity updatedProduct)
+    public async Task<ProductEntity?> UpdateProductWithReviewAndVariantHandlingAsync(Guid productId, UpdateProductInput updatedProductInput)
     {
         var product = await _context.Products
             .Include(p => p.Category)
             .Include(p => p.Variants)
             .Include(p => p.Reviews)
-            .FirstOrDefaultAsync(p => p.ProductId == updatedProduct.ProductId);
+            .FirstOrDefaultAsync(p => p.ProductId == productId);
 
         if (product == null) return null;
 
-        product.Name = updatedProduct.Name;
-        product.Description = updatedProduct.Description;
-        product.Images = updatedProduct.Images;
+        product.Name = updatedProductInput.Name;
+        product.Description = updatedProductInput.Description;
+        product.Images = updatedProductInput.Images;
 
-        if (product.Category != null && updatedProduct.Category != null)
+        if (!string.IsNullOrEmpty(updatedProductInput.CategoryName))
         {
-            product.Category.Name = updatedProduct.Category.Name;
+            var category = await GetOrCreateCategoryByNameAsync(updatedProductInput.CategoryName);
+            product.Category = category;
         }
 
-        product.Variants.Clear();
-        product.Variants = updatedProduct.Variants;
+        var updatedVariantIds = updatedProductInput.Variants.Select(v => v.ProductVariantId).ToHashSet();
 
-        product.Reviews.Clear();
-        product.Reviews = updatedProduct.Reviews;
+        product.Variants = product.Variants.Where(v => updatedVariantIds.Contains(v.ProductVariantId)).ToList();
+
+        foreach (var variantInput in updatedProductInput.Variants)
+        {
+            var existingVariant = product.Variants.FirstOrDefault(v => v.ProductVariantId == variantInput.ProductVariantId);
+            if (existingVariant != null)
+            {
+                
+                existingVariant.Size = variantInput.Size;
+                existingVariant.Color = variantInput.Color;
+                existingVariant.Stock = variantInput.Stock;
+                existingVariant.Price = variantInput.Price;
+            }
+            else
+            {
+                product.Variants.Add(new ProductVariantEntity
+                {
+                    ProductId = product.ProductId,
+                    ProductVariantId = Guid.NewGuid(),
+                    Size = variantInput.Size,
+                    Color = variantInput.Color,
+                    Stock = variantInput.Stock,
+                    Price = variantInput.Price,
+                });
+            }
+        }
+        var updatedReviewIds = updatedProductInput.Reviews.Select(r => r.ReviewId).ToHashSet();
+
+        product.Reviews = product.Reviews.Where(r => updatedReviewIds.Contains(r.ReviewId)).ToList();
+
+        foreach (var reviewInput in updatedProductInput.Reviews)
+        {
+            var existingReview = product.Reviews.FirstOrDefault(r => r.ReviewId == reviewInput.ReviewId);
+            if (existingReview != null)
+            {
+                existingReview.ClientName = reviewInput.ClientName;
+                existingReview.Rating = reviewInput.Rating;
+                existingReview.Comment = reviewInput.Comment;
+            }
+            else
+            {
+                product.Reviews.Add(new ReviewEntity
+                {
+                    ProductId = product.ProductId,
+                    ReviewId = reviewInput.ReviewId,
+                    ClientName = reviewInput.ClientName,
+                    Rating = reviewInput.Rating,
+                    Comment = reviewInput.Comment,
+                    CreatedAt = DateTime.UtcNow,
+                });
+            }
+        }
 
         await _context.SaveChangesAsync();
         return product;
     }
+
+
 
     public async Task<bool> DeleteProductAsync(Guid productId)
     {
@@ -124,6 +177,25 @@ public class ProductService
         await _context.SaveChangesAsync();
 
         return review;
+    }
+    public async Task<bool> DeleteReviewAsync(int reviewId)
+    {
+        var review = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == reviewId);
+        if (review == null) return false;
+
+        _context.Reviews.Remove(review);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteVariantAsync(Guid variantId)
+    {
+        var variant = await _context.ProductVariants.FirstOrDefaultAsync(v => v.ProductVariantId == variantId);
+        if (variant == null) return false;
+
+        _context.ProductVariants.Remove(variant);
+        await _context.SaveChangesAsync();
+        return true;
     }
 }
 
