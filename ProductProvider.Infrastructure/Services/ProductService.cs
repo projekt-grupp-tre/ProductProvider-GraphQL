@@ -61,7 +61,7 @@ public class ProductService
                 product.Variants.Add(new ProductVariantEntity
                 {
                     ProductId = product.ProductId,
-                    ProductVariantId = Guid.NewGuid(),
+                    ProductVariantId = variantInput.ProductVariantId,
                     Size = variantInput.Size,
                     Color = variantInput.Color,
                     Stock = variantInput.Stock,
